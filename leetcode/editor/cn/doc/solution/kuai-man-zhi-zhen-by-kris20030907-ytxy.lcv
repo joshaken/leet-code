@@ -1,0 +1,38 @@
+> Problem: [141. 环形链表](https://leetcode.cn/problems/linked-list-cycle/description/)
+
+[TOC]
+
+* []
+
+```Java
+
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        //快慢指针，如果相遇一定有环
+        if(head == null || head.next == null) return false;
+
+        ListNode fast = head.next;
+        ListNode lazy = head;
+
+        //循环条件这里又栽了，fast一定经过lazy能走的节点，而fast还必须一次走两步，所以要判断fast.next是否为null
+        while(fast != null && fast.next != null){
+            if(fast == lazy) return true;
+            fast = fast.next.next;
+            lazy = lazy.next;
+        }
+        return false;
+    }
+}
+```
+

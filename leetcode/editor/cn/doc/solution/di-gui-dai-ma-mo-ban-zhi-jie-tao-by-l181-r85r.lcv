@@ -1,0 +1,27 @@
+### 解题思路
+
+可以直接套用递归的模板代码，然后在加一些条件的判断即可
+
+### 代码
+
+* c
+
+```c
+bool check(struct TreeNode* p, struct TreeNode* q)
+{
+    if(p == NULL && q == NULL)
+        return true;
+    if(p == NULL || q == NULL)
+        return false;
+    if(p->val == q->val)
+        return check(p->left, q->right) && check(p->right, q->left);
+    else
+        return false;
+}
+bool isSymmetric(struct TreeNode* root){
+    return check(root, root);
+}
+```
+
+下面是代码的执行情况
+![图片.png](https://pic.leetcode.cn/1678869280-gTVQxc-%E5%9B%BE%E7%89%87.png)

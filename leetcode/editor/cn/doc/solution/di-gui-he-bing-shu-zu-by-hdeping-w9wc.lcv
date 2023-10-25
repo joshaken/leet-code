@@ -1,0 +1,31 @@
+1 判断是否空指针
+2 返回较小值的指针p1，并且p1指向p2和p1.Next合并后的指针头
+
+* golang
+
+```golang
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+    if l1 == nil {
+        return l2
+    }
+    if l2 == nil {
+        return l1
+    }
+    if l1.Val < l2.Val {
+        l1.Next = mergeTwoLists(l1.Next,l2)
+        return l1
+    } else {
+          l2.Next = mergeTwoLists(l1,l2.Next)
+        return l2
+    }
+
+}```
+```
+

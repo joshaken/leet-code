@@ -1,0 +1,37 @@
+> Problem: [21. 合并两个有序链表](https://leetcode.cn/problems/merge-two-sorted-lists/description/)
+
+# 使用指针规范
+
+* []
+
+```Java
+
+class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode head = new ListNode(0);
+        ListNode pre = head;   //记录最终指向合并后有序链表的指针
+        //注意哈，head只是指针，不是额外的链表，它只是用来“规范一下某个链表的路线”
+
+        if(list1 == null) return list2;
+        else if(list2 == null) return list1;
+
+        while(list1 != null && list2 != null){
+            //拿个小接哪个
+            if(list1.val < list2.val){
+                head.next = list1;
+                list1 = list1.next;
+            }else {
+                head.next = list2;
+                list2 = list2.next;
+            }
+            //移动指针到下一个节点，以接入其他节点
+            head = head.next;
+        }
+        //两个链表之间可能存在某些节点没被合并完，比如list1 : 1 2 3 , list2:1 3 4 5 
+        head.next = list1 == null ? list2 : list1;
+
+        return pre.next;
+    }
+}
+```
+

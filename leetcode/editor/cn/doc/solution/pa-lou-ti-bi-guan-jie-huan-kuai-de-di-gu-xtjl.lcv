@@ -1,0 +1,30 @@
+爬楼梯的公式是：$f(n)=f(n-1)+f(n-2)$，直接递归的代码：
+
+* []
+
+```python
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n==1:return 1
+        if n==2: return 2
+        return self.climbStairs(n-1)+self.climbStairs(n-2)
+```
+
+会超时，这里基于递归思路做一些改进。
+可以看出，对于$n\geq 4$，有$f(n)=f(k)f(n-k)+f(k-1)f(n-k-1)$
+其中$2\leq k\leq n-1$。
+这个公式的是原公式的推广，即上$n$阶台阶，可拆分为上到第$k$阶台阶后再上$n-k$阶台阶的过程，以及上到$k-1$阶台阶后直接跨到$k+1$阶台阶再上$n-k-1$的过程。我们在实际操作中选$k$为中点：
+
+* []
+
+```python
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n==1:return 1
+        if n==2:return 2
+        if n==3:return 3
+        else:
+            mid=int(n/2)
+            return self.climbStairs(mid)*self.climbStairs(n-mid)+self.climbStairs(mid-1)*self.climbStairs(n-mid-1)
+```
+

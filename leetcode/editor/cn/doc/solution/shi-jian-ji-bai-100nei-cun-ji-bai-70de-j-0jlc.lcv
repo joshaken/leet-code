@@ -1,0 +1,49 @@
+这题没有什么算法，只是考察简单的链表操作。
+如果是工程上的写法，需要为返回的链表额外创建相应的内存，即针对每一个新创建的节点calloc一个新节点并赋值。这样操作可以在函数返回后依然对旧的链表进行任意操作，同时不影响新生成的链表。但如果仅是做题为了快的话，仅指针操作就好了。附代码：
+
+* c
+
+```c
+struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2){
+    // 首先判断边界情况（输入有可能为空）
+    if (list1 == NULL) return list2;
+    if (list2 == NULL) return list1;
+
+    struct ListNode* p1 = list1, *p2 = list2;
+    struct ListNode* newlist = NULL;
+    struct ListNode* tmp = newlist;
+
+    // 当两个链表均不为空时，使用两个指针逐个判断大小
+    while (p1 != NULL && p2 != NULL) {
+
+        // 新链表赋值。这里要特别注意一下，如果新链表为空时，
+        // 需要先赋值才能继续操作
+        if (newlist == NULL) {
+            newlist = p1->val > p2->val ? p2 : p1;
+            tmp = newlist;
+        }
+        else {
+            tmp->next = p1->val > p2->val ? p2 : p1;
+            tmp = tmp->next;
+        }
+        
+        // 更新遍历旧链表的指针
+        if (p1->val > p2->val)
+            p2 = p2->next;
+        else
+            p1 = p1->next;
+    }
+
+    // 当指向其中一个链表的指针已为空，剩下的操作就只需要把新链表结尾的
+    // 指针指向另一个链表的剩余部分
+    if (p1 == NULL) {
+        tmp->next = p2;
+    }
+    else if (p1 != NULL){
+        tmp->next = p1;
+    }
+
+    return newlist;
+}
+```
+

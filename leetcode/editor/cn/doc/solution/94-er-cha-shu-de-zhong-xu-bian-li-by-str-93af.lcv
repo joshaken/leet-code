@@ -1,0 +1,148 @@
+> Problem: [94. 二叉树的中序遍历](https://leetcode.cn/problems/binary-tree-inorder-traversal/description/)
+
+[TOC]
+
+# ADL语言描述
+
+> 非递归遍历
+
+* 
+
+```
+算法NIO(t)
+/* 设t是指向一棵二叉树T的根的指针*/
+/*本算法利用一个辅助堆栈S非递归中根遍历T 的所有结点*/
+/*NIO是NorecInOrder之缩写 */
+CREATE ( S ).  p←t .  /* 操作CREATE(S)系指创建一个空堆栈S */
+NIO2. [入栈]
+WHILE   p≠∧   DO ( S<=p .  p←Left ( p) . ) 注意是while循环
+IF   S为空   THEN  RETURN. 
+ELSE  p<=S .
+PRINT (Data ( p ) ). p←Right ( p ). 
+GOTO NIO2 .注意要使用goto语句▐
+```
+
+> 递归遍历
+
+* 
+
+```
+算法InOrder (t)
+/* 递归中根遍历根为t的二叉树 */
+IF   t=NULL   THEN   RETURN.	/* 若t为空，则算法结束 */
+InOrder ( Left ( t )) .
+PRINT ( Data ( t )) .
+InOrder ( Right ( t )) . ▐
+
+```
+
+# Code
+
+* []
+
+```C
+//非递归中根遍历
+/**
+* Definition for a binary tree node.
+* struct TreeNode {
+*     int val;
+*     struct TreeNode *left;
+*     struct TreeNode *right;
+* };
+*/
+/**
+
+* Note: The returned array must be malloced, assume caller calls free().
+*/
+
+typedef struct stack{
+  struct TreeNode *node;
+  struct stack *next;
+}stack;
+
+stack *create(){
+  stack *top = (stack*)malloc(sizeof(stack));
+  top -> next = NULL;
+  return top;
+}
+
+void stackpush(stack *s,struct TreeNode*t){
+  stack *temp = (stack*)malloc(sizeof(stack));
+  temp -> node = t;
+  temp -> next = s -> next;
+  s -> next = temp;
+}
+
+struct TreeNode *stackpop(stack *s){
+  if(s -> next == NULL){
+      return NULL;
+  }
+  stack *temp = s -> next;
+  struct TreeNode *t = temp -> node;
+  s -> next = temp -> next;
+  free(temp);
+  return t;
+}
+
+bool isempty(stack *s){
+  return s -> next == NULL;
+}
+
+void inorder(struct TreeNode *root, int *ret, int *size){
+  stack *s = create();
+  struct TreeNode *t = root;
+  flag:
+  while(t != NULL){
+      stackpush(s,t);
+      t = t -> left;
+  }
+  if(isempty(s)){
+      return;
+  }
+  t = stackpop(s);
+  ret[(*size)++] = t -> val;
+  t = t -> right;
+  goto flag;
+}
+
+int* inorderTraversal(struct TreeNode* root, int* returnSize){
+  int *ret = (int*)malloc(sizeof(int)*501);
+  *returnSize = 0;
+  inorder(root,ret,returnSize);
+  return ret;
+}
+```
+
+* []
+
+```C
+//递归中根遍历
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+void inorder(struct TreeNode *root,int *ret,int *size){
+    if(root == NULL){
+        return;
+    }
+    inorder(root -> left,ret,size);
+    ret[(*size)++] = root -> val;
+    inorder(root -> right,ret,size);
+}
+
+int* inorderTraversal(struct TreeNode* root, int* returnSize){
+    int *ret = (int*)malloc(sizeof(int)*501);
+    *returnSize = 0;   
+    inorder(root,ret,returnSize);
+    return ret;
+}
+```
+

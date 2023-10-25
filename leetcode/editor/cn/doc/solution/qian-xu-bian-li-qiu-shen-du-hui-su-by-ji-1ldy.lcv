@@ -1,0 +1,92 @@
+> Problem: [104. 二叉树的最大深度](https://leetcode.cn/problems/maximum-depth-of-binary-tree/description/)
+
+[TOC]
+
+# 思路
+
+> 本题求二叉树的最大深度，可以从三个角度入手：
+> （1）后序遍历——求根结点的高度
+> （2）前序遍历——求深度
+> （3）层次遍历——求树的层数
+
+> （1）（3）易于理解，本题解着重关注（2）前序遍历。
+
+# 解题方法
+
+> 前序遍历即：中 左 右。
+> 其中，“中”理解为对结点的处理，“左”“右”理解为遍历左右子树。
+
+> 前序与后序的区别就在于信息的采集：
+> 前序：先进行处理，再遍历左右子树，即用父亲信息处理孩子
+> 后序：先遍历左右子树，再进行处理，即用孩子信息处理父亲
+
+> 不难看出，前序的处理顺序符合“深度”的逻辑：从上往下逐级增加深度。
+> 但比较前序后序两者代码，不难发现，前序需要进行“回溯”。
+> 因为后序是：左右中，从父亲到孩子遍历的过程中，由于递归（栈）的影响，信息处理后由下而上逐级返回，比较易于理解。
+
+> 本题前序遍历的递归函数包含两个参数，第一个参数是当前处理的结点，第二个参数是当前结点的深度。
+> 在函数中，如果左右孩子不为空，则进行递归，此时左右孩子结点传入时，其深度+1，但退出循环后，其代表的是先前父亲的深度，即本层递归深度，所以深度必须回溯-1。
+
+# Code
+
+* []
+
+```C++
+
+/**
+* Definition for a binary tree node.
+* struct TreeNode {
+*     int val;
+*     TreeNode *left;
+*     TreeNode *right;
+*     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+*     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+*     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+* };
+*/
+
+//前序遍历
+class Solution {
+public:
+  int ans;
+  void getDepth(TreeNode* node, int depth){
+      ans = depth > ans ? depth : ans;                      //中
+      if(node->left == NULL && node->right == NULL) return;
+      if(node->left){                                       //左
+          getDepth(node->left, depth + 1);
+      //    depth++;    // 深度+1
+      //    getdepth(node->left, depth);
+      //    depth--;    // 回溯，深度-1   
+      }
+      if(node->right){                                      //右
+          getDepth(node->right, depth + 1);
+      //    depth++;    // 深度+1
+      //    getdepth(node->right, depth);
+      //    depth--;    // 回溯，深度-1
+      }
+      return;
+  }
+  int maxDepth(TreeNode* root) {
+      ans = 0;
+      if(root == nullptr) return 0;
+      getDepth(root, 1);
+      return ans;
+  }
+};
+
+//后序遍历
+class Solution {
+public:
+  int getDepth(TreeNode* node){
+      if(node == NULL) return 0;
+      int leftDepth = getDepth(node->left);        //左
+      int rightDepth = getDepth(node->right);      //右
+      int depth = 1 + max(leftDepth, rightDepth);  //中
+      return depth;
+  }
+  int maxDepth(TreeNode* root) {
+      return getDepth(root);
+  }
+};
+```
+

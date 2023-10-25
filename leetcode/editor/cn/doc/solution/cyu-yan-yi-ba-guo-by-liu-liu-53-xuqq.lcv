@@ -1,0 +1,58 @@
+* 
+
+```
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+
+struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2){
+    if (l1 == NULL && l2 == NULL)
+        return NULL;
+    int array[100] = {0};
+    int p = 0;
+    while (l1 != NULL || l2 != NULL) {
+        if (l1 == NULL) {
+            array[p] = l2->val;
+            p++;
+            l2 = l2->next;
+            continue;
+        }
+
+        if (l2 == NULL) {
+            array[p] = l1->val;
+            p++;
+            l1 = l1->next;
+            continue;
+        }
+
+        if (l1->val <= l2->val) {
+            array[p] = l1->val;
+            p++;
+            l1 = l1->next;
+        } else {
+            array[p] = l2->val;
+            p++;
+            l2 = l2->next;
+        }
+    }
+    
+    struct ListNode* head = (struct ListNode *)malloc(sizeof(struct ListNode));
+    struct ListNode* tmp = head;
+    for (int i = 0; i < p; i++) {
+        tmp->val = array[i];
+        if (i + 1 != p) {
+           tmp->next = (struct ListNode *)malloc(sizeof(struct ListNode));
+           tmp = tmp->next;
+        } else {
+            tmp->next = NULL;
+        }
+    }
+    return head;
+}
+```
+
